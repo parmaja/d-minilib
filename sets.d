@@ -18,7 +18,8 @@ struct Set(T) {
     alias SetArray = T[];
 
     bool[T]_set; //Associative Arrays
-      
+    
+  public:
     void opAssign(T value){
       _set = null;
       include(value);
