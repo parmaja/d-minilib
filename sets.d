@@ -1,4 +1,4 @@
-﻿module sets;
+﻿module minilib.sets; 
 /**
 This file is part of the "minilib"
 
@@ -18,7 +18,7 @@ struct Set(T) {
     alias SetArray = T[];
 
     bool[T]_set; //Associative Arrays
-
+      
     void opAssign(T value){
       _set = null;
       include(value);
