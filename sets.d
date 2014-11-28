@@ -7,7 +7,6 @@ This file is part of the "minilib"
 
 */
 import std.string;
-import std.conv;
 import std.array;
 import std.range;
 

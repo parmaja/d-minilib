@@ -7,4 +7,4 @@ This file is part of the "minilib"
 
 */
 
-public import minilib.classes;
+public import sets;
