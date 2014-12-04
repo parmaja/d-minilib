@@ -1,0 +1,9 @@
+{
+	"name": "minilib",
+	"description": "A Small mini library for D.",
+	"authors": ["Zaher Dirkey"],
+	"homepage": "https://github.com/parmaja/d-minilib",
+	"license": "MIT",
+	"dependencies": {
+	}
+}

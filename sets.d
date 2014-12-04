@@ -8,8 +8,8 @@ This file is part of the "minilib"
 */
 
 /**
-  @discrip:
-    Set of enumaraton based on associative arrays
+  @describe:
+    Set of enumeration based on associative arrays
   @ref
     http://rosettacode.org/wiki/Set
     http://rosettacode.org/wiki/Associative_array
@@ -40,7 +40,7 @@ struct Set(T) {
         include(t);
       }
     }
-
+/+
     //A = B equality; true if every element of set A is in set B and vice-versa.
     //A < B equality; true if every element of set A is in set B but the count less is diff
     //A > B equality; true if every element of set B is in set A but the count less is diff
@@ -54,7 +54,7 @@ struct Set(T) {
       }
       return this;
     }
-
++/
     //A in B subset; true if every element in set A is also in set B.
     //opBinary(string op : "in")
 
