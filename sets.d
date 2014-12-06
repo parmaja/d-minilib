@@ -25,38 +25,39 @@ struct Set(T) if(is(T == enum)) {
   private:
 
     alias SetType = typeof(this);
-    alias SetArray = T[];
-    alias SetValues = bool[T]; //Associative Arrays
+    alias Element = T;
+    alias Elements = bool[Element]; //Associative Arrays
+    alias SetArray = Element[];
 
-    SetValues _set; 
+    Elements _elements; 
 
   public:
-    void opAssign(T value){
+    void opAssign(Element element){
       clear();
-      include(value);
+      include(element);
     }
 
-    void opAssign(SetArray value){
-      _set = null;
-      foreach(int i, T t; value){
-        include(t);
+    void opAssign(SetArray array){
+      clear();
+      foreach(int i, Element element; array){
+        include(element);
       }
     }
 
     //A = B equality; true if every element of set A is in set B and vice-versa.
     //A < B equality; true if every element of set A is in set B but the count less is diff
     //A > B equality; true if every element of set B is in set A but the count less is diff
-    bool opBinary(string op)(T other) if (op == ">") {
-      return compare(other._set) > 0;
+    bool opBinary(string op)(SetType other) if (op == ">") {
+      return compare(other._elements, other) > 0;
     }
 
     //A in B subset; true if every element in set A is also in set B.
-    bool opBinary(string op)(T other) if (op == "in") {
+    bool opBinary(string op)(Element other) if (op == "in") {
       return exists(other);
     }
 
     bool opBinary(string op)(SetType other) if (op == "in") {
-      return exists(other._set);
+      return exists(other._elements);
     }
       
     bool opBinary(string op)(SetArray other) if (op == "in") {
@@ -65,111 +66,132 @@ struct Set(T) if(is(T == enum)) {
 
     //A + B union; a set of all elements either in set A or in set B.
 
-    SetType opBinary(string op)(T other) if (op == "+") {
+    SetType opBinary(string op)(Element other) if (op == "+") {
       include(other);
       return this;
     }
 
     SetType opBinary(string op)(SetArray other) if (op == "+") {
-      foreach(int i, T t; other) {
+      foreach(int i, Element element; other) {
         include(t);
       }
       return this;
     }
 
     SetType opBinary(string op)(SetType other) if (op == "+") {
-      foreach(T t, bool b; other._set) {
+      foreach(Element element, bool b; other._elements) {
         if (b)
-          include(t);
+          include(element);
       }
       return this;
     }
 
     //A * B intersection; a set of all elements in both set A and set B.
-    SetType opBinary(string op)(T other) if (op == "*") {
+    SetType opBinary(string op)(Element other) if (op == "*") {
       //todo
       return this;
     }
 
     //A - B difference; a set of all elements in set A, except those in set B.
-    SetType opBinary(string op)(T other) if (op == "-") {
+    SetType opBinary(string op)(Element other) if (op == "-") {
       exclude(other);
       return this;
     }
 
     SetType opBinary(string op)(SetArray other) if (op == "-") {
-      foreach(int i, T t; other) {
+      foreach(int i, Element element; other) {
         exclude(t);
       }
       return this;
     }
 
     SetType opBinary(string op)(SetType other) if (op == "-") {
-      foreach(T t, bool b; other._set) {
+      foreach(Element element, bool b; other._elements) {
         if (b)
-          exclude(t);
+          exclude(element);
       }
       return this;
     }
 
   public:
-    void include(T value) {
-      _set[value] = true;
+
+    void include(Element element) {
+      _elements[element] = true;
     }
 
-    void exclude(T value) {
-      _set[value] = false;
-      //or _set.remove(value);//TODO
+    void exclude(Element element) {
+      _elements[element] = false;
+      //or _elements.remove(element);//TODO
     }
 
-    bool exists(T value) {
-      foreach(T t, bool b; _set) {
-        if (b && (value == t)) {
+    protected bool exists(Elements elements, Element element) {
+      if (elements.length == 0)
+        return false;//todo not sure if we must return false?
+      foreach(Element e, bool b; elements) {
+        if (b && (element == e)) {
+          return true;
+        }
+      }
+      return true;
+    }
+
+    protected bool exists(Elements elements, Elements inElements) {
+      if (elements.length == 0)
+        return false;//todo not sure if we must return false?
+      foreach(Element e, bool b; elements) {
+        if (b && !exists(inElements, e)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    bool exists(Element element) {
+      foreach(Element e, bool b; _elements) {
+        if (b && (element == e)) {
           return true;
         }
       }
       return false;
     }
 
-    bool exists(SetArray value) {
-      if (value.length == 0)
+    bool exists(SetArray array) {
+      if (array.length == 0)
         return false;//todo not sure if we must return false?
-      foreach(int i, T t; value) {
-        if (!exists(t))
+      foreach(int i, Element element; array) {
+        if (!exists(element))
           return false;
       }
       return true;
     }
 
-/+
-    int compare(SetArray value){
-      int c1 = countOf(_set);
-      int c2 = countOf(value);
+    int compare(Elements elements){
+      int c1 = countOf(_elements);
+      int c2 = countOf(elements);
       if (c1 < c2) {
-        if (exists(_set, value))
+        if (exists(_elements, elements))
           return 1;
         else
           return 2;
       }
       else if (c1 < c2) {
-        if (exists(value, _set))
+        if (exists(elements, _elements))
           return 1;
         else
           return 2;
       }
       else {
-        if (exists(_set, value))
+        if (exists(_elements, elements))
           return 0;
         else
-          return WHAT!!!;
+          return 0;//WHAT!!!;
 
       }
     }
-+/
 
-    protected int countOf(SetValues value) {
+    protected int countOf(Elements elements) {
       int c = 0;
-      foreach(T t, bool b; value) {
+      foreach(Element element, bool b; elements) {
         if (b)
           c++;
       }
@@ -178,10 +200,10 @@ struct Set(T) if(is(T == enum)) {
 
     ///We count only true elements
     int count() {
-      return countOf(_set);
+      return countOf(_elements);
     }
 
     void clear(){
-      _set = null;
+      _elements = null;
     }
 }
