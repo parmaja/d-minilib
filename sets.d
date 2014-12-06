@@ -120,8 +120,8 @@ struct Set(T) if(is(T == enum)) {
     }
 
     void exclude(Element element) {
-      _elements[element] = false;
-      //or _elements.remove(element);//TODO
+      //_elements[element] = false;
+      _elements.remove(element);
     }
 
     protected bool exists(Elements elements, Element element) {
