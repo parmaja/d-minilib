@@ -26,8 +26,9 @@ struct Set(T) if(is(T == enum)) {
 
     alias SetType = typeof(this);
     alias SetArray = T[];
+    alias SetValues = bool[T]; //Associative Arrays
 
-    bool[T]_set; //Associative Arrays
+    SetValues _set; 
 
   public:
     void opAssign(T value){
@@ -45,19 +46,8 @@ struct Set(T) if(is(T == enum)) {
     //A = B equality; true if every element of set A is in set B and vice-versa.
     //A < B equality; true if every element of set A is in set B but the count less is diff
     //A > B equality; true if every element of set B is in set A but the count less is diff
-    int opCmp(SetType other){
-      return compare(other._set);
-    }
-
-    int opCmp(SetArray other){
-      int c1 = 0;
-      int c2 = 0;
-      foreach(int i, T t; other) {
-        if (other[t])
-          c1++;
-        //todo
-      }
-      return 0;
+    bool opBinary(string op)(T other) if (op == ">") {
+      return compare(other._set) > 0;
     }
 
     //A in B subset; true if every element in set A is also in set B.
@@ -132,16 +122,16 @@ struct Set(T) if(is(T == enum)) {
       //or _set.remove(value);//TODO
     }
 
-    void exists(T value) {
+    bool exists(T value) {
       foreach(T t, bool b; _set) {
-        if (b && element == t) {
+        if (b && (value == t)) {
           return true;
         }
       }
       return false;
     }
 
-    void exists(SetArray value) {
+    bool exists(SetArray value) {
       if (value.length == 0)
         return false;//todo not sure if we must return false?
       foreach(int i, T t; value) {
@@ -177,7 +167,7 @@ struct Set(T) if(is(T == enum)) {
     }
 +/
 
-    protected int countOf(SetArray value) {
+    protected int countOf(SetValues value) {
       int c = 0;
       foreach(T t, bool b; value) {
         if (b)
@@ -188,12 +178,7 @@ struct Set(T) if(is(T == enum)) {
 
     ///We count only true elements
     int count() {
-      int c = 0;
-      foreach(T t, bool b; _set) {
-        if (b)
-          c++;
-      }
-      return c;
+      return countOf(_set);
     }
 
     void clear(){
