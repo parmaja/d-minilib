@@ -54,6 +54,12 @@ int main(string[] argv)
   else
 	  writeln("A,B is not in set2");
 
+  set1 = [MyEnum.B];
+  if (set1 in set2) 
+	  writeln("set1 in set2");  
+  else
+	  writeln("set1 is not in set2");
+
   if ([MyEnum.B, MyEnum.C] in set2) 
 	  writeln("B,C in set2");  
   else

@@ -61,7 +61,7 @@ struct Set(T) if(is(T == enum)) {
     }
 
     bool opBinaryRight(string op)(SetType other) if (op == "in") {
-      return exists(other._elements);
+      return exists(other._elements, _elements);
     }
       
     bool opBinaryRight(string op)(SetArray other) if (op == "in") {
