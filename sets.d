@@ -16,10 +16,11 @@ This file is part of the "minilib"
 */
 
 import std.string;
-import std.array;
+import std.array; 
 import std.range;
 
-struct Set(T) {
+//struct Set(T) {
+struct Set(T) if(is(T == enum)) {
 
   private:
 
@@ -30,7 +31,7 @@ struct Set(T) {
 
   public:
     void opAssign(T value){
-      _set = null;
+      clear();
       include(value);
     }
 
@@ -40,23 +41,37 @@ struct Set(T) {
         include(t);
       }
     }
-/+
+
     //A = B equality; true if every element of set A is in set B and vice-versa.
     //A < B equality; true if every element of set A is in set B but the count less is diff
     //A > B equality; true if every element of set B is in set A but the count less is diff
     int opCmp(SetType other){
-      return opCmp(other._set);
+      return compare(other._set);
     }
 
     int opCmp(SetArray other){
+      int c1 = 0;
+      int c2 = 0;
       foreach(int i, T t; other) {
+        if (other[t])
+          c1++;
         //todo
       }
-      return this;
+      return 0;
     }
-+/
+
     //A in B subset; true if every element in set A is also in set B.
-    //opBinary(string op : "in")
+    bool opBinary(string op)(T other) if (op == "in") {
+      return exists(other);
+    }
+
+    bool opBinary(string op)(SetType other) if (op == "in") {
+      return exists(other._set);
+    }
+      
+    bool opBinary(string op)(SetArray other) if (op == "in") {
+      return exists(other);
+    }
 
     //A + B union; a set of all elements either in set A or in set B.
 
@@ -81,6 +96,10 @@ struct Set(T) {
     }
 
     //A * B intersection; a set of all elements in both set A and set B.
+    SetType opBinary(string op)(T other) if (op == "*") {
+      //todo
+      return this;
+    }
 
     //A - B difference; a set of all elements in set A, except those in set B.
     SetType opBinary(string op)(T other) if (op == "-") {
@@ -104,12 +123,77 @@ struct Set(T) {
     }
 
   public:
-    void include(T t) {
-      _set[t] = true;
+    void include(T value) {
+      _set[value] = true;
     }
 
-    void exclude(T t) {
-      _set[t] = false;
+    void exclude(T value) {
+      _set[value] = false;
+      //or _set.remove(value);//TODO
+    }
+
+    void exists(T value) {
+      foreach(T t, bool b; _set) {
+        if (b && element == t) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    void exists(SetArray value) {
+      if (value.length == 0)
+        return false;//todo not sure if we must return false?
+      foreach(int i, T t; value) {
+        if (!exists(t))
+          return false;
+      }
+      return true;
+    }
+
+/+
+    int compare(SetArray value){
+      int c1 = countOf(_set);
+      int c2 = countOf(value);
+      if (c1 < c2) {
+        if (exists(_set, value))
+          return 1;
+        else
+          return 2;
+      }
+      else if (c1 < c2) {
+        if (exists(value, _set))
+          return 1;
+        else
+          return 2;
+      }
+      else {
+        if (exists(_set, value))
+          return 0;
+        else
+          return WHAT!!!;
+
+      }
+    }
++/
+
+    protected int countOf(SetArray value) {
+      int c = 0;
+      foreach(T t, bool b; value) {
+        if (b)
+          c++;
+      }
+      return c;
+    }
+
+    ///We count only true elements
+    int count() {
+      int c = 0;
+      foreach(T t, bool b; _set) {
+        if (b)
+          c++;
+      }
+      return c;
     }
 
     void clear(){
