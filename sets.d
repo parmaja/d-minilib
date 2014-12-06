@@ -44,23 +44,27 @@ struct Set(T) if(is(T == enum)) {
       }
     }
 
+    bool opEquals(SetArray other) {
+		return other.length==count() && exists(other);
+    }
+/+
     //A = B equality; true if every element of set A is in set B and vice-versa.
     //A < B equality; true if every element of set A is in set B but the count less is diff
     //A > B equality; true if every element of set B is in set A but the count less is diff
-    bool opBinary(string op)(SetType other) if (op == ">") {
-      return compare(other._elements, other) > 0;
+    bool opBinary(string op)(SetArray other) if (op == "<") {
+      return (countOf(other) < count()) && (exists(other));
     }
-
++/	
     //A in B subset; true if every element in set A is also in set B.
-    bool opBinary(string op)(Element other) if (op == "in") {
+    bool opBinaryRight(string op)(Element other) if (op == "in") {
       return exists(other);
     }
 
-    bool opBinary(string op)(SetType other) if (op == "in") {
+    bool opBinaryRight(string op)(SetType other) if (op == "in") {
       return exists(other._elements);
     }
       
-    bool opBinary(string op)(SetArray other) if (op == "in") {
+    bool opBinaryRight(string op)(SetArray other) if (op == "in") {
       return exists(other);
     }
 
@@ -163,30 +167,6 @@ struct Set(T) if(is(T == enum)) {
           return false;
       }
       return true;
-    }
-
-    int compare(Elements elements){
-      int c1 = countOf(_elements);
-      int c2 = countOf(elements);
-      if (c1 < c2) {
-        if (exists(_elements, elements))
-          return 1;
-        else
-          return 2;
-      }
-      else if (c1 < c2) {
-        if (exists(elements, _elements))
-          return 1;
-        else
-          return 2;
-      }
-      else {
-        if (exists(_elements, elements))
-          return 0;
-        else
-          return 0;//WHAT!!!;
-
-      }
     }
 
     protected int countOf(Elements elements) {

@@ -9,7 +9,7 @@ import std.stdio;
 import std.string;
 import minilib.sets;
 
-enum MyEnum {A, B, C, D};
+enum MyEnum {A, B, C, D, F};
 
 alias MySet = Set!MyEnum;
 
@@ -39,10 +39,37 @@ int main(string[] argv)
   set2 = set2 - MyEnum.D;
   writeln(set2);
 
-  if (MyEnum.C in set2) {
+  if (MyEnum.C in set2) 
     writeln("C in set2");
-  }
+  else
+	 writeln("C is not in set2");
 
+  if ([MyEnum.D] in set2) 
+	  writeln("D in set2");  
+  else
+	  writeln("D is not in set2");
+
+  if ([MyEnum.A, MyEnum.B] in set2) 
+	  writeln("A,B in set2");  
+  else
+	  writeln("A,B is not in set2");
+
+  if ([MyEnum.B, MyEnum.C] in set2) 
+	  writeln("B,C in set2");  
+  else
+	  writeln("B,C is not in set2");
+
+  if ([MyEnum.B, MyEnum.C, MyEnum.F] == set2) 
+	  writeln("B,C,F in set2");  
+  else
+	  writeln("B,C,F is not in set2");
+
+/+
+  if (set2 < [MyEnum.B, MyEnum.C]) 
+	  writeln("[B,C] < set2");  
+  else
+	  writeln("[B,C] is not < set2");
++/
   readln(); 
   return 0;
 }
