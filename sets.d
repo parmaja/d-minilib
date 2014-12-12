@@ -32,6 +32,11 @@ struct Set(T) if(is(T == enum)) {
     Elements _elements; 
 
   public:
+
+    this(SetArray array){
+      opAssign(array);
+    }
+
     void opAssign(Element element){
       clear();
       include(element);
@@ -185,5 +190,9 @@ struct Set(T) if(is(T == enum)) {
 
     void clear(){
       _elements = null;
+    }
+
+    static SetType opCall(SetArray array) {
+      return new SetType(array);
     }
 }
