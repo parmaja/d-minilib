@@ -8,3 +8,4 @@ This file is part of the "minilib"
 */
 
 public import minilib.sets;
+public import minilib.metaclasses;
