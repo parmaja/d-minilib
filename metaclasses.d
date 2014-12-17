@@ -1,4 +1,4 @@
-module metaclasses;
+module minilib.metaclasses;
 /**
 This file is part of the "minilib"
 
@@ -13,8 +13,19 @@ This file is part of the "minilib"
   @ref:
   @example:
     alias MyMetaClass = MetaClass!BaseClass mc;
+
+  @doc:  
+    check if is instance of my class
+    typeid(obj1) == typeid(obj2)
+    typeid(obj1) == typeid(MyClass)
     
+  @hints:
+    if you want to use factory your class must have default constructor (or no constructors).  
+    if you have subclass constructor SubClass(a,b) you need to add default constructor even if u have it in the base class, D hide the functions in base class if u add new one in subclass.
 */
+
+
+pragma(msg, "You are using metaclasses.d it is not finished!");
 
 struct MetaClass(T){
   ClassInfo _info;
@@ -24,6 +35,6 @@ struct MetaClass(T){
   }
 
   T create(){
-    return cast(T)_info.create();
+    return cast(T)_info.create();        
   }
 }
