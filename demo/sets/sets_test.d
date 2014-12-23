@@ -13,6 +13,13 @@ enum MyEnum {A, B, C, D, F};
 
 alias MySet = Set!MyEnum;
 
+void check(MySet set){
+  if (MyEnum.B in set)    
+    writeln("checked pass B");
+  else
+    writeln("checked bad B");
+}
+
 int main(string[] argv)
 {
   MySet set1;
@@ -69,6 +76,9 @@ int main(string[] argv)
 	  writeln("B,C,F in set2");  
   else
 	  writeln("B,C,F is not in set2");
+  
+  check(MySet([MyEnum.B]));
+  check(MySet([MyEnum.C]));
 
 /+
   if (set2 < [MyEnum.B, MyEnum.C]) 
