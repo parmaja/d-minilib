@@ -1,10 +1,9 @@
 module minilib.metaclasses;
 /**
-This file is part of the "minilib"
+  This file is part of the "minilib"
 
-@license   The MIT License (MIT) Included in this distribution
-@author    Zaher Dirkey <zaher at parmaja dot com>
-
+  @license   The MIT License (MIT) Included in this distribution
+  @author    Zaher Dirkey <zaher at yahoo dot com>
 */
 
 /**
@@ -27,7 +26,12 @@ This file is part of the "minilib"
 
 pragma(msg, "You are using metaclasses.d it is not finished!");
 
-struct MetaClass(T){
+/*
+  use hasMember to check, http://dlang.org/phobos/std_traits.html
+    template hasMember(T, string name)
+*/
+struct MetaClass(T)  
+{
   ClassInfo _info;
   this(ClassInfo cf){
     _info = cf;
